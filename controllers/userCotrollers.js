@@ -6,6 +6,10 @@ const jwtsecret = process.env.JWT_SECRET
 
 const userSignupController = async (req, res, next) => {
     const { firstname, lastname, email, password } = req.body
+    
+    if(!firstname || !lastname || !email || !password){
+        return res.status(400).json({ message: "please provide the required field" })
+    }
 
     let existinguser
 
@@ -25,7 +29,7 @@ const userSignupController = async (req, res, next) => {
         firstname,
         lastname,
         email,
-        password: hashedpassword
+        password:hashedpassword
     })
 
     try {
@@ -34,7 +38,7 @@ const userSignupController = async (req, res, next) => {
         console.log(error)
     }
 
-    return res.status(201).json({ message: user })
+    return res.status(201).json({ message: "user created successfully." })
 }
 
 
