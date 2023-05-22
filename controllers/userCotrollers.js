@@ -68,12 +68,12 @@ const userSigninController = async (req, res, next) => {
     }
 
     const token = jwt.sign({ id: existinguser._id }, jwtsecret, {
-        expiresIn: "30s"
+        expiresIn: "24h"
     })
 
     res.cookie(String(existinguser._id), token, {
         path: "/",
-        expires: new Date(Date.now() + 1000 * 30),
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
         sameSite: "lax"
     })
@@ -119,7 +119,25 @@ const getUser = async (req, res, next) => {
 
 }
 
+const logout = (req, res, next) => {
+    const cookies = req.headers.cookie;
+    const prevToken = cookies.split("=")[1];
+    if (!prevToken) {
+      return res.status(400).json({ message: "Couldn't find token" });
+    }
+    jwt.verify(String(prevToken), jwtsecret, (err, user) => {
+      if (err) {
+        console.log(err);
+        return res.status(403).json({ message: "Authentication failed" });
+      }
+      res.clearCookie(`${user.id}`);
+      req.cookies[`${user.id}`] = "";
+      return res.status(200).json({ message: "Successfully Logged Out" });
+    });
+  };
+
 exports.userSignupController = userSignupController
 exports.userSigninController = userSigninController
 exports.verifyToken = verifyToken
 exports.getUser=getUser
+exports.logout=logout
