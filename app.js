@@ -8,7 +8,7 @@ const cors=require("cors")
 const messageRoutes = require("./routes/messageRoutes")
 
 const app = express()
-app.use(cors({credentials:true,origin:"https://rimchat.netlify.app"}))
+app.use(cors({credentials:true,origin:"http://localhost:5173"}))
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api",[userRoutes,messageRoutes])
@@ -39,7 +39,7 @@ mongoose.connect(mongodbUri).then(() => {
 
     const io = new Server(newServer,{
         cors:{
-            origin:"https://rimchat.netlify.app"
+            origin:"http://localhost:5173"
         }
     })
 

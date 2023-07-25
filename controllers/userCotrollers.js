@@ -75,7 +75,8 @@ const userSigninController = async (req, res, next) => {
         path: "/",
         expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
         httpOnly: true,
-        sameSite: "lax"
+        sameSite: "none",
+        secure:true
     })
 
     return res.status(200).json({ message: "user successfully logged in" })
